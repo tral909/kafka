@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  zookeeper1:
+    image: confluentinc/cp-zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper1:22888:23888;zookeeper2:32888:33888
+  zookeeper2:
+    image: confluentinc/cp-zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper1:22888:23888;zookeeper2:32888:33888
+  kafka1:
+    image: confluentinc/cp-kafka
+    container_name: kafka1
+    depends_on: 
+      - zookeeper1
+      - zookeeper2
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:22181,zookeeper2:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1      
+    ports: 
+      - 29092:29092
+  kafka2:
+    image: confluentinc/cp-kafka
+    container_name: kafka2    
+    depends_on: 
+      - zookeeper1
+      - zookeeper2
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:22181,zookeeper2:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:39092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1      
+    ports: 
+      - 39092:39092
