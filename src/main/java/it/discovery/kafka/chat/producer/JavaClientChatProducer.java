@@ -31,10 +31,11 @@ public class JavaClientChatProducer implements ChatProducer {
 
     public static void main(String[] args) throws InterruptedException {
         Chat chat = new Chat("kafka-training");
-        ChatMessage message = new ChatMessage("Sergiy", "Hello, IT-Discovery", chat);
+        ChatMessage message = new ChatMessage("John", "Hello from John", chat);
         ChatProducer producer = new JavaClientChatProducer("localhost:9092");
         for(int i = 0 ; i < 20; i ++) {
             producer.send(message);
+            System.out.println("Send message: " + message);
             Thread.sleep(2000);
         }
     }
