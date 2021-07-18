@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
 
+//TODO refactor this class to make it easier testable
 public class ChatConsumer {
     private final List<String> chats;
 
